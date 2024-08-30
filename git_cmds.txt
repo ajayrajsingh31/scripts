@@ -1,0 +1,31 @@
+git init 
+
+git branch -m main
+
+git remote add GitHub repo url
+
+git add .
+
+git commit -m "add"
+
+git push -u origin main
+
+
+
+if this error occurs  ! [rejected]        main -> main (non-fast-forward)
+error: failed to push some refs to 'https://github.com/ajayrajsingh31/Youtube-clone-app.git'
+hint: Updates were rejected because the tip of your current branch is behind
+hint: its remote counterpart. If you want to integrate the remote changes,
+hint: use 'git pull' before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details
+
+
+git fetch origin
+
+git merge origin/main   --- if after this command you got error fatal: refusing to merge unrelated histories  then run this cmd
+
+git merge origin/main --allow-unrelated-histories
+
+git add .
+
+then repeat the above git cmds.
