@@ -1,0 +1,152 @@
+1. root@ip-172-31-37-222:/home/ubuntu# lsblk
+NAME     MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
+loop0      7:0    0 25.2M  1 loop /snap/amazon-ssm-agent/7993
+loop1      7:1    0 55.7M  1 loop /snap/core18/2829
+loop2      7:2    0 38.8M  1 loop /snap/snapd/21759
+xvda     202:0    0    8G  0 disk 
+├─xvda1  202:1    0    7G  0 part /
+├─xvda14 202:14   0    4M  0 part 
+├─xvda15 202:15   0  106M  0 part /boot/efi
+└─xvda16 259:0    0  913M  0 part /boot
+xvdf     202:80   0    5G  0 disk 
+
+to check storage in Linux
+
+2. sudo !!
+
+3. ubuntu@ip-172-31-37-222:~$ mkfs.ext4 /dev/xvdf ----for format storage
+
+4. root@ip-172-31-37-222:/home/ubuntu# mkdir test
+root@ip-172-31-37-222:/home/ubuntu# cd test
+root@ip-172-31-37-222:/home/ubuntu/test# cd /
+root@ip-172-31-37-222:/# ls
+bin                boot  etc   lib                lib64       media  opt   root  sbin                snap  sys   tmp  var
+bin.usr-is-merged  dev   home  lib.usr-is-merged  lost+found  mnt    proc  run   sbin.usr-is-merged  srv   test  usr
+
+5. root@ip-172-31-37-222:/# mount /dev/xvdf /test/ ---for mount 5gb storage in test dir
+
+6. root@ip-172-31-37-222:/# mountpoint /test   -----to check 
+/test is a mountpoint
+
+7. root@ip-172-31-37-222:/# cd /test
+root@ip-172-31-37-222:/test# touch demo.txt
+root@ip-172-31-37-222:/test# echo "hello i love aws">test.txt
+root@ip-172-31-37-222:/test# ls
+demo.txt  lost+found  test.txt  ----to store some files
+
+8. root@ip-172-31-37-222:/test# cd ..
+root@ip-172-31-37-222:/# umount /test
+root@ip-172-31-37-222:/# cd test
+root@ip-172-31-37-222:/test# ls
+root@ip-172-31-37-222:/test#  ---to unmount volume from test
+
+9. root@ip-172-31-44-244:/home/ubuntu# file -s /dev/xvdf
+/dev/xvdf: Linux rev 1.0 ext4 filesystem data, UUID=60adb04e-92cf-47a4-b751-105a80f77f35 (extents) (64bit) (large files) (huge files)
+
+--to check whether files are there or not 
+
+10. root@ip-172-31-44-244:/home/ubuntu# mkdir /data
+root@ip-172-31-44-244:/home/ubuntu# mount /dev/xvdf /data
+root@ip-172-31-44-244:/home/ubuntu# cd /data/
+root@ip-172-31-44-244:/data# ls
+demo.txt  lost+found  test.txt
+root@ip-172-31-44-244:/data# cat test.txt
+hello i love aws
+root@ip-172-31-44-244:/data#  ---this is process for store previous volume data in new  instance.
+
+11. root@ip-172-31-45-210:/data# df -h
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/root       6.8G  1.6G  5.2G  23% /
+tmpfs           479M     0  479M   0% /dev/shm
+tmpfs           192M  872K  191M   1% /run
+tmpfs           5.0M     0  5.0M   0% /run/lock
+/dev/xvda16     881M   76M  744M  10% /boot
+/dev/xvda15     105M  6.1M   99M   6% /boot/efi
+tmpfs            96M   12K   96M   1% /run/user/1000
+/dev/xvdf       4.9G   28K  4.6G   1% /data
+
+12. root@ip-172-31-45-210:/data# resize2fs /dev/xvdf  ----for resize filesystem from 4gb to 8gb
+resize2fs 1.47.0 (5-Feb-2023)
+Filesystem at /dev/xvdf is mounted on /data; on-line resizing required
+old_desc_blocks = 1, new_desc_blocks = 1
+The filesystem on /dev/xvdf is now 2097152 (4k) blocks long.
+
+root@ip-172-31-45-210:/data# df -h
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/root       6.8G  1.6G  5.2G  23% /
+tmpfs           479M     0  479M   0% /dev/shm
+tmpfs           192M  872K  191M   1% /run
+tmpfs           5.0M     0  5.0M   0% /run/lock
+/dev/xvda16     881M   76M  744M  10% /boot
+/dev/xvda15     105M  6.1M   99M   6% /boot/efi
+tmpfs            96M   12K   96M   1% /run/user/1000
+/dev/xvdf       7.8G   28K  7.4G   1% /data
+
+
+13. root@ip-172-31-45-210:/# lsblk
+NAME     MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
+loop0      7:0    0 25.2M  1 loop /snap/amazon-ssm-agent/7993
+loop1      7:1    0 55.7M  1 loop /snap/core18/2829
+loop2      7:2    0 38.8M  1 loop /snap/snapd/21759
+xvda     202:0    0   16G  0 disk 
+├─xvda1  202:1    0    7G  0 part /
+├─xvda14 202:14   0    4M  0 part 
+├─xvda15 202:15   0  106M  0 part /boot/efi
+└─xvda16 259:0    0  913M  0 part /boot
+xvdf     202:80   0    8G  0 disk /data
+root@ip-172-31-45-210:/# df -h
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/root       6.8G  1.6G  5.2G  23% /
+tmpfs           479M     0  479M   0% /dev/shm
+tmpfs           192M  872K  191M   1% /run
+tmpfs           5.0M     0  5.0M   0% /run/lock
+/dev/xvda16     881M   76M  744M  10% /boot
+/dev/xvda15     105M  6.1M   99M   6% /boot/efi
+tmpfs            96M   12K   96M   1% /run/user/1000
+/dev/xvdf       7.8G   28K  7.4G   1% /data
+root@ip-172-31-45-210:/# growpart /dev/xvda 1  ---to resize root storage from 8 to 16    xvda 1 is a partition number
+CHANGED: partition=1 start=2099200 old: size=14677983 end=16777182 new: size=31455199 end=33554398
+root@ip-172-31-45-210:/# lsblk
+NAME     MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
+loop0      7:0    0 25.2M  1 loop /snap/amazon-ssm-agent/7993
+loop1      7:1    0 55.7M  1 loop /snap/core18/2829
+loop2      7:2    0 38.8M  1 loop /snap/snapd/21759
+xvda     202:0    0   16G  0 disk 
+├─xvda1  202:1    0   15G  0 part /
+├─xvda14 202:14   0    4M  0 part 
+├─xvda15 202:15   0  106M  0 part /boot/efi
+└─xvda16 259:0    0  913M  0 part /boot
+xvdf     202:80   0    8G  0 disk /data
+
+root@ip-172-31-45-210:/# df -h
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/root       6.8G  1.6G  5.2G  23% /
+tmpfs           479M     0  479M   0% /dev/shm
+tmpfs           192M  872K  191M   1% /run
+tmpfs           5.0M     0  5.0M   0% /run/lock
+/dev/xvda16     881M   76M  744M  10% /boot
+/dev/xvda15     105M  6.1M   99M   6% /boot/efi
+tmpfs            96M   12K   96M   1% /run/user/1000
+/dev/xvdf       7.8G   28K  7.4G   1% /data
+
+root@ip-172-31-45-210:/# resize2fs /dev/xvda1
+resize2fs 1.47.0 (5-Feb-2023)
+Filesystem at /dev/xvda1 is mounted on /; on-line resizing required
+old_desc_blocks = 1, new_desc_blocks = 2
+The filesystem on /dev/xvda1 is now 3931899 (4k) blocks long.
+
+root@ip-172-31-45-210:/# df -h
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/root        15G  1.6G   13G  11% /
+tmpfs           479M     0  479M   0% /dev/shm
+tmpfs           192M  872K  191M   1% /run
+tmpfs           5.0M     0  5.0M   0% /run/lock
+/dev/xvda16     881M   76M  744M  10% /boot
+/dev/xvda15     105M  6.1M   99M   6% /boot/efi
+tmpfs            96M   12K   96M   1% /run/user/1000
+/dev/xvdf       7.8G   28K  7.4G   1% /data
+
+14. xfs_growfs  --- for resize xfs filesystem
+
+root@ip-172-31-45-210:/# file -s /dev/xvda1
+/dev/xvda1: Linux rev 1.0 ext4 filesystem data, UUID=e97ae3ba-1e02-4d97-9427-d5f37ff742a9, volume name "cloudimg-rootfs" (needs journal recovery) (extents) (64bit) (large files) (huge files)
