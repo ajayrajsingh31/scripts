@@ -1,6 +1,48 @@
-docker build -t myimg .
+docker images  ---gives images in local 
+docker search imagename ---it search images from docker hub if any found 
+docker ps ----to see all running containers
+
+docker ps -a --list all running and stopped conatiner 
+
+docker pull imagename --it pulls images from dockerhub to docker local space 
+
+-----to create container from image---- 
+docker run imagename   --it will run and stop container
+
+docker run -it --name mycontainer imagename /bin/bash  --  -it means interactive terminal  by this cmd you will inside the container
+
+docker rmi -f imagename --it will remove image  -f means forcefully 
+
+----run command used for 2 purposes.-----------
+1. to convert image into container
+2. it is a combination pull  and execute 
+
+docker run -it --name test imagename /bin/bash
+
+---------------------------------------------------
+
+docker run -it -d --name test2 imagename /bin/bash  -- it will run container without going inside the container  -d means detach mode 
+
+docker attach container_name or id  -- it will go inside container after exit the container the container will stop
+
+----after exit form container it will stop for again start the container without going inside -------------------------
+
+docker start container_name or id
+
+--------------------------------------------------------------------------
+
+docker exec -it container_name /bin/bash  ---it will go directly into comd prompt after exit the container the container will not stop it is still running
+
+docker stop container_name -- it will stop the container
+
+docker commit container_name imagename(any)  --to create image of container
+
+docker build -t myimg .  ----it will build image 
 
 docker login
-docker image tag myimg:latest ajayrajisngh31/myimg:latest
 
-docker push ajayrajisngh31/myimg:latest
+docker image tag myimg:latest ajayrajisngh31/myimg:latest  --for tagging image
+
+docker push ajayrajisngh31/myimg:latest   --it push the images to repo
+
+docker run -d -p8000:8000 image_name  ---to run docker image from  giving port
