@@ -1,0 +1,6 @@
+docker build -t myimg .
+
+docker login
+docker image tag myimg:latest ajayrajisngh31/myimg:latest
+
+docker push ajayrajisngh31/myimg:latest
