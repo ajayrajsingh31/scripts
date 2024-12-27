@@ -37,7 +37,7 @@ docker stop container_name -- it will stop the container
 
 docker commit container_name imagename(any)  --to create image of container
 
-docker build -t myimg .  ----it will build image 
+docker build -t myimg .  ----it will build image  --t means tag
 
 docker login
 
